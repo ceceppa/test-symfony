@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calculator{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<main class="calculator">
+    <section class="jumbotron text-center">
+        <h1>Solution</h1>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div action="/calculator/solution" method="get" class="col-4">
+                <span class="form-control calculator-display">{{solution}}</span>
+
+                <br><br>
+                <a href="/calculator">Calculator</a>
+            </div>
+            <div class="col-md-4">
+            </div>
+
+        </div>
+    </section>
+</main>
+
+{% endblock %}

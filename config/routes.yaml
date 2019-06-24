@@ -1,0 +1,14 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+calculator:
+  path: /calculator
+  controller: App\Controller\CalculatorController::index
+
+solution:
+  path: /calculator/solution/{number1}/{operand}/{number2}
+  requirements:
+    number1: \d+
+    operand: \+|-|\*|\/
+    number2: \d+
+  controller: App\Controller\CalculatorController::solution

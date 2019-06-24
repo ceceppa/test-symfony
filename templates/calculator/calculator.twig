@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calculator{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+    .has-margin {
+        margin: 2px;
+    }
+
+    .number.has-margin {
+        flex: 0 0 calc(33.33333% - 4px);
+    }
+
+    .operand.has-margin {
+        flex: 0 0 calc(50% - 4px);
+    }
+</style>
+<main class="calculator">
+    <section class="jumbotron text-center">
+        <h1>Calculator</h1>
+
+        <br>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <form action="/calculator/solution" method="get" class="col-4">
+                <input type="hidden" name="number1" class="number">
+                <input type="hidden" name="operand" class="operand">
+                <input type="hidden" name="number2" class="number">
+                <span class="form-control calculator-display"></span>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-8 numbers">
+                        <div class="row">
+
+                            {% for number in 1..9 %}
+                            <button type="button" class="btn btn-light col-md-4 has-margin number">{{ number }}</button>
+                            {% endfor %}
+
+                            <button type="button" class="btn btn-light col-md-12 number">0</button>
+                        </div>
+                    </div>
+
+                    <div class="col-3 offset-1">
+                        <div class="row">
+                            <button type="button" class="btn btn-light col-6 has-margin operand">+</button>
+                            <button type="button" class="btn btn-light col-6 has-margin operand">-</button>
+                            <button type="button" class="btn btn-light col-6 has-margin operand">*</button>
+                            <button type="button" class="btn btn-light col-6 has-margin operand">/</button>
+
+                            <div class="col-12">&nbsp;</div>
+
+                            <button type="submit" class="btn btn-light col-12">=</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="col-md-4"></div>
+
+        </div>
+    </section>
+</main>
+<script>
+    (function () {
+        var currentNumberFieldIndex = 0;
+        var lastAddedIsOperand = false;
+        var currentValue = '';
+
+        var numberFields = document.querySelectorAll('input.number');
+        var operandField = document.querySelector('input.operand');
+        var displayElement = document.querySelector('.calculator-display');
+        var formElement = document.querySelector('form');
+
+        document.addEventListener('click', updateDisplay);
+        formElement.addEventListener('submit', updateFieldsAndSubmit);
+
+        function updateDisplay(e) {
+            const value = e.target.innerText;
+            const isNumber = e.target.classList.contains('number');
+            const isOperand = e.target.classList.contains('operand');
+
+            if (!isNumber && !isOperand) {
+                return;
+            }
+
+            if (isOperand) {
+                updateNumberField(value);
+            } else {
+                currentValue += value;
+
+                displayElement.innerText += value;
+            }
+
+        }
+
+        function updateNumberField(value) {
+            if (lastAddedIsOperand) {
+                return;
+            }
+
+            operandField.value = value;
+            numberFields[currentNumberFieldIndex].value = currentValue;
+
+            increaseNumberFieldIndexAndMaybeSubmit(value);
+        }
+
+        function increaseNumberFieldIndexAndMaybeSubmit(value) {
+            if (++currentNumberFieldIndex > 1) {
+                form.submit();
+
+                return;
+            }
+
+            displayElement.innerHTML += value;
+            currentValue = '';
+        }
+
+        function updateFieldsAndSubmit(e) {
+            numberFields[currentNumberFieldIndex].value = currentValue;
+
+            if (numberFields[0].value.length == 0 || numberFields[1].value.length == 0) {
+                alert('You need to specify 2 numbers');
+                e.preventDefault();
+            }
+
+            var operand = operandField.value == '/' ? '%2F' : operandField.value;
+            window.location.href = `/calculator/solution/${numberFields[0].value}/${operand}/${numberFields[1].value}`;
+            e.preventDefault();
+        }
+    })();
+</script>
+
+{% endblock %}
